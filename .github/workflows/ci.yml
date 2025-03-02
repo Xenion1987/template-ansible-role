@@ -1,65 +1,61 @@
+---
 name: CI Pipeline
 
-env:
-  role_name: my_role
-
 on:
+  pull_request:
   push:
     branches:
       - main
-  pull_request:
 
 defaults:
   run:
-    working-directory: "${role_name}"
+    working-directory: "template-ansible-role"
 
 jobs:
-  ansible-lint:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
         with:
-          path: "${role_name}"
+          path: "template-ansible-role"
 
       - name: Set up Python 3.
         uses: actions/setup-python@v5
         with:
           python-version: "3.x"
 
-      - name: Install role requirements
-        run: |
-          [ -s requirements.txt ] && pip install -r requirements.txt
-          [ -s requirements.yml ] && ansible-galaxy collection install -r requirements.yml
+      - name: Install test dependencies
+        run: pip install -q yamllint
 
-      - name: Install ansible-lint
-        run: |
-          pip install ansible-lint
+      - name: Run tests
+        run: yamllint .
 
-      - name: Run ansible-lint
-        run: ansible-lint
-
-  ansible-test:
+  test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        distro:
+          - "debian:12"
+          - "rockylinux:9"
+          - "ubuntu:24.04"
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
         with:
-          path: "${role_name}"
+          path: "template-ansible-role"
 
       - name: Set up Python 3.
         uses: actions/setup-python@v5
         with:
           python-version: "3.x"
 
-      - name: Install role requirements
-        run: |
-          [ -s requirements.txt ] && pip install -r requirements.txt
-          [ -s requirements.yml ] && ansible-galaxy collection install -r requirements.yml
+      - name: Install test dependencies
+        run: pip install ansible molecule molecule-plugins[docker] docker
 
-      - name: Install Ansible
-        run: |
-          pip install ansible
-
-      - name: Run Ansible Playbook
-        run: ansible-playbook tests/test.yml
+      - name: Run tests
+        run: molecule test
+        env:
+          PY_COLORS: "1"
+          ANSIBLE_FORCE_COLOR: "1"
+          MOLECULE_DISTRO: ${{ matrix.distro }}

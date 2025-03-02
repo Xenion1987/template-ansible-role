@@ -6,11 +6,11 @@
 
 ### `.github/workflows/ci.yml`
 
-Replace `env.role_name: my_role` with the new role name.
+Replace `template-ansible-role` with the new role name.
 
 ### `.vscode/settings.json`
 
-Replace directory placeholder `WORKSPACE_PATH` with the current working directory's `venv` path.
+Update and comment in Ansible and Python path values, if required
 
 ```sh
 sed -i s,WORKSPACE_PATH,${PWD}, .vscode/settings.json
@@ -27,10 +27,6 @@ Update all `meta` informations to fit to your requirements.
 ### `meta/argument-specs.yml`
 
 Explain all variables within this file. This also can be used to auto-generate a `README.md` file. Follow instructions on [docs.ansible.com](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_reuse_roles.html#role-argument-validation).
-
-### `tests/test.yml`
-
-Replace `my_role` with the new role name. Create tasks for testing porposes when pushing to GitHub/GitLab and run automated tests.
 
 ### `README.md`
 
