@@ -1,16 +1,16 @@
 ---
-# collections:
-#   - community.general
-#
-# dependencies: []
+collections: []
+
+dependencies: []
 
 galaxy_info:
-  role_name: "user_management"
   author: "Xenion1987"
-  description: "Template repository for creating ansible roles"
   company: "Access-InTech"
+  description: "Template repository for creating ansible roles"
   license: "BSD, MIT"
   min_ansible_version: "2.11"
+  namespace: "xenion1987"
+  role_name: "template_ansible_role"
   # platforms:
   #   - name: Debian
   #     versions:

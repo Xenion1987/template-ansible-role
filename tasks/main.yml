@@ -1,4 +1,3 @@
 ---
-# tasks file for new_role
 - name: PING
   ansible.builtin.ping:
